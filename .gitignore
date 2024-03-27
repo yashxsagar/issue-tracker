@@ -33,3 +33,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# The Notes file for the issue tracker Next.js project
+mosh-next Project - Issue Tracker.txt
