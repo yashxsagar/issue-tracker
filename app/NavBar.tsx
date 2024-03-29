@@ -15,7 +15,7 @@ const NavBar = () => {
   return (
     <nav className="flex flex-row space-x-6 border-b mb-5 px-5 h-16 items-center">
       <Link href="/">
-        <IoBugOutline size={18} color={"black"} />
+        <IoBugOutline size={18} color={"#8E4585"} />
       </Link>
       <ul className="flex flex-row space-x-6">
         {links.map((link) => {
