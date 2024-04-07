@@ -2,14 +2,7 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-
-const createIssueSchema = z
-  .object({
-    title: z.string().min(3).max(255),
-    description: z.string().min(15),
-    status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]).optional(),
-  })
-  .strict();
+import { createIssueSchema } from "../../validationSchemas";
 
 export async function POST(request: NextRequest) {
   let body = {} as z.infer<typeof createIssueSchema>;
@@ -28,7 +21,7 @@ export async function POST(request: NextRequest) {
   if (!validation.success) {
     return NextResponse.json(
       // { error: validation.error.errors },
-      { error: validation.error.format() },
+      { error: validation.error.format },
       { status: 400, statusText: "Invalid Request" }
     );
   }

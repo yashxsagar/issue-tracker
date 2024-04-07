@@ -1,6 +1,6 @@
 "use client";
 import CustomSimpleMDE from "@/app/components/CustomSimpleMDE";
-import { Button, RadioCards, TextField, Callout } from "@radix-ui/themes";
+import { Button, RadioCards, TextField, Callout, Text } from "@radix-ui/themes";
 import "easymde/dist/easymde.min.css";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -10,20 +10,20 @@ import { AxiosError } from "axios";
 import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createIssueSchema } from "@/app/validationSchemas";
 
-const createIssueSchema = z
-  .object({
-    title: z.string().min(3).max(255),
-    description: z.string().min(15),
-    status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]).optional(),
-    // email: z.string().email(),
-  })
-  .strict();
-
-type IssueForm = z.infer<typeof createIssueSchema>;
+type IssueForm = z.infer<typeof createIssueSchema>; //Basically, we are letting zod infer the type of the useForm data object from the centrally defined back-end createIssueSchema defined at @/app/validationSchemas
 const page = () => {
   const router = useRouter();
-  const { register, control, formState, handleSubmit } = useForm<IssueForm>();
+  const {
+    register,
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<IssueForm>({
+    resolver: zodResolver(createIssueSchema),
+  });
   const [error, setError] = useState("");
   // console.log(register("status"));
   return (
@@ -58,10 +58,20 @@ const page = () => {
           autoFocus={true}
           {...register("title")}
         ></TextField.Root>
+        {errors.title && (
+          <Text color="plum" as="div">
+            {errors.title.message}
+          </Text>
+        )}
         {/* <TextArea placeholder="Describe your issue"></TextArea> */}
         {/* Container <div> for defining a color for the SimpleMde component on hover */}
         {/* Instead of directly rendering the CustomSimpleMDE component which does not support application of props via obj destructuring notation, we take help of the Controller function  */}
         <CustomSimpleMDE borderColor="plum" borderWidth="2" control={control} />
+        {errors.description && (
+          <Text color="plum" as="div">
+            {errors.description.message}
+          </Text>
+        )}
         <section className="max-w-xl">
           <Controller
             name="status"
@@ -84,9 +94,9 @@ const page = () => {
               </RadioCards.Root>
             )}
           />
-          {formState.errors.status && (
+          {/* {formState.errors.status && (
             <span>{formState.errors.status.message}</span>
-          )}
+          )} */}
         </section>
         {/* <RadioCards.Root defaultValue="1" {...formInstance.register("status")}>
           <RadioCards.Item value="OPEN">Open</RadioCards.Item>
