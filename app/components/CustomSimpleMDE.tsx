@@ -4,6 +4,8 @@ import { useState } from "react";
 // import SimpleMDE from "react-simplemde-editor";
 import classNames from "classnames";
 import dynamic from "next/dynamic";
+import { Controller } from "react-hook-form";
+import styles from "./CustomSimpleMDE.module.css";
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   loading: () => {
     return <p>Loading...</p>;
@@ -13,8 +15,10 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
 interface Props {
   borderColor: string;
   borderWidth: string;
+  //   hookFormInstance: any;
+  control: any;
 }
-const CustomSimpleMDE = ({ borderColor, borderWidth }: Props) => {
+const CustomSimpleMDE = ({ borderColor, borderWidth, control }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = () => {
     setIsFocused(true);
@@ -25,25 +29,49 @@ const CustomSimpleMDE = ({ borderColor, borderWidth }: Props) => {
   return (
     <div
       className={classNames({
-        [`border-${borderWidth}`]: !isFocused,
-        "border-transparent rounded-sm": !isFocused,
+        [`${styles.borderThin}`]: !isFocused,
+        "border-transparent rounded-md": !isFocused,
         // "border-1": isFocused,
-        [`border-${borderWidth} rounded-md`]: isFocused,
-        [`border-${borderColor}`]: isFocused,
+        [`border-${borderColor} `]: isFocused,
+        [`${styles.borderThin} rounded-md`]: isFocused,
         // "rounded-sm": isFocused,
         // "rounded-md": isFocused,
       })}
     >
-      <SimpleMDE
-        placeholder="Describe your issue"
-        // autoFocus={true}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        // options={{
-        //   toolbar: ["bold", "italic", "heading"],
-        //   spellChecker: true,
-        // }}
-      ></SimpleMDE>
+      <Controller
+        name="description"
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <SimpleMDE
+            placeholder="Describe your issue"
+            onChange={onChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            value={value}
+            // options={{
+            //   autosave: { uniqueId: "issue-tracker", enabled: true },
+            //   tabSize: 4,
+            //   toolbar: false,
+            //   toolbarTips: false,
+            // }}
+            // ref={ref}
+
+            // onFocus={handleFocus}
+            // {...field}
+          />
+        )}
+      />
+
+      {/* //   <SimpleMDE
+    //     placeholder="Describe your issue"
+    //     // autoFocus={true}
+        // onFocus={handleFocus}
+        // onBlur={handleBlur}
+    //     // options={{
+    //     //   toolbar: ["bold", "italic", "heading"],
+    //     //   spellChecker: true,
+    //     // }}
+    //   ></SimpleMDE> */}
     </div>
   );
 };
