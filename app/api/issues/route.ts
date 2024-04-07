@@ -21,13 +21,14 @@ export async function POST(request: NextRequest) {
         error:
           "Please provide a valid Issue Object with proper shape and contents",
       },
-      { status: 400, statusText: "Invaliid Object" }
+      { status: 400, statusText: "Invalid Object" }
     );
   }
   const validation = createIssueSchema.safeParse(body);
   if (!validation.success) {
     return NextResponse.json(
-      { error: validation.error.errors },
+      // { error: validation.error.errors },
+      { error: validation.error.format() },
       { status: 400, statusText: "Invalid Request" }
     );
   }

@@ -32,7 +32,7 @@ const CustomSimpleMDE = ({ borderColor, borderWidth, control }: Props) => {
         [`${styles.borderThin}`]: !isFocused,
         "border-transparent rounded-md": !isFocused,
         // "border-1": isFocused,
-        [`border-${borderColor} `]: isFocused,
+        [`border-plum `]: isFocused,
         [`${styles.borderThin} rounded-md`]: isFocused,
         // "rounded-sm": isFocused,
         // "rounded-md": isFocused,
