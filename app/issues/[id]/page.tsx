@@ -2,11 +2,19 @@
 import prisma from "@/prisma/client";
 import { data } from "autoprefixer";
 import React, { useState } from "react";
-import { Badge, Blockquote, Callout, Heading, Text } from "@radix-ui/themes";
+import {
+  Badge,
+  Blockquote,
+  Callout,
+  Card,
+  Heading,
+  Text,
+} from "@radix-ui/themes";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { Issue } from "@prisma/client";
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 
 type Props = {
   params: { id: string };
@@ -47,7 +55,13 @@ const page = async ({ params: { id } }: Props) => {
         <IssueStatusBadge status={issue!.status} />
         <Text size={"2"}>{issue?.createdAt.toLocaleString()}</Text>
       </div>
-      <Blockquote size="2">{issue?.description}</Blockquote>
+      {/* <Blockquote size="2">{issue?.description}</Blockquote> */}
+      {/* We want to ideally use react-markdown component in order to make the user specified 'markdown' in the issue's description field visible here */}
+      <Card className="prose" variant="classic">
+        {/* <Blockquote size={"2"}> */}
+        <ReactMarkdown>{issue?.description}</ReactMarkdown>
+        {/* </Blockquote> */}
+      </Card>
     </div>
   );
 };
