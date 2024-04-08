@@ -13,6 +13,7 @@ import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchemas";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 type IssueForm = z.infer<typeof createIssueSchema>; //Basically, we are letting zod infer the type of the useForm data object from the centrally defined back-end createIssueSchema defined at @/app/validationSchemas
 const page = () => {
@@ -26,6 +27,7 @@ const page = () => {
     resolver: zodResolver(createIssueSchema),
   });
   const [error, setError] = useState("");
+  const [isSubmitting, setSubmitting] = useState(false);
   // console.log(register("status"));
   return (
     //For encapsulating the Callout UI component from the radix-ui library
@@ -42,6 +44,7 @@ const page = () => {
         className="max-w-xl space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setSubmitting(true);
             console.log(data);
             const response = await axios.post("/api/issues", data);
           } catch (error: any) {
@@ -51,6 +54,8 @@ const page = () => {
             // }
             // console.log(error);
             setError(JSON.stringify(error.response.data.error));
+          } finally {
+            setSubmitting(false);
           }
         })}
       >
@@ -103,7 +108,10 @@ const page = () => {
           <RadioCards.Item value="IN_PROGRESS">In Progress</RadioCards.Item>
           <RadioCards.Item value="CLOSED">Closed</RadioCards.Item>
         </RadioCards.Root> */}
-        <Button type="submit">Submit Issue</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          Submit Issue
+          {isSubmitting && <LoadingSpinner />}
+        </Button>
       </form>
     </div>
   );
