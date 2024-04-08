@@ -1,22 +1,22 @@
-import React, { Fragment } from "react";
-import { Button, Table } from "@radix-ui/themes";
-import Link from "next/link";
-import prisma from "@/prisma/client";
+import { Table } from "@radix-ui/themes";
+import React from "react";
 import IssueStatusBadge from "../components/IssueStatusBadge";
-import delay from "delay";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import IssueActions from "./IssueActions";
 
-const Issues = async () => {
-  const issues = await prisma.issue.findMany();
-  await delay(2000);
+const LoadingIssuesPage = () => {
+  let issuesPlaceHolderArray = [1, 2, 3, 4, 5];
   return (
-    <Fragment>
-      {/* Modularizing and Abstracting it out */}
-      {/* <div className="m-6 space-y-6">
-        <h1 className="text-4xl">Issues Page</h1>
-        <Button>
-          <Link href="/issues/new">New Issue</Link>
-        </Button>
+    <>
+      {/* <div className="mx-6 mt-6">Loading...</div>
+      <div
+        className="m-6 inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-plum motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        role="status"
+      >
+        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+          Loading...
+        </span>
       </div> */}
       <IssueActions />
       <div className="m-6">
@@ -33,24 +33,24 @@ const Issues = async () => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {issues.map((i, index) => {
+            {issuesPlaceHolderArray.map((i, index) => {
               return (
-                <Table.Row key={i.id}>
+                <Table.Row key={i}>
                   <Table.Cell>
-                    {i.title}
+                    <Skeleton />
                     {/* <div className="block md:hidden">{i.status}</div> */}
                     <div className="block md:hidden">
-                      <IssueStatusBadge status={i.status} />
+                      <Skeleton />
                     </div>
                   </Table.Cell>
                   <Table.Cell className="hidden md:table-cell">
-                    <IssueStatusBadge status={i.status} />
+                    <Skeleton />
                     {/* {i.status} */}
                     {/* Now issuing the status inside of a 'radix-ui' badge component instead of in a plain Table Cell's text format */}
                   </Table.Cell>
                   {/* Making it mobile-optimized and responsive */}
                   <Table.Cell className="hidden md:table-cell">
-                    {i.createdAt.toLocaleString()}
+                    <Skeleton />
                   </Table.Cell>
                   {/* Making it mobile-optimized and responsive */}
                 </Table.Row>
@@ -59,8 +59,8 @@ const Issues = async () => {
           </Table.Body>
         </Table.Root>
       </div>
-    </Fragment>
+    </>
   );
 };
 
-export default Issues;
+export default LoadingIssuesPage;
