@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchemas";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type IssueForm = z.infer<typeof createIssueSchema>; //Basically, we are letting zod infer the type of the useForm data object from the centrally defined back-end createIssueSchema defined at @/app/validationSchemas
 const page = () => {
@@ -58,20 +59,19 @@ const page = () => {
           autoFocus={true}
           {...register("title")}
         ></TextField.Root>
-        {errors.title && (
-          <Text color="plum" as="div">
-            {errors.title.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
+        {/* {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>} */}
+        {/* Instead of checking whether each form field's state contains an error state/message, we can simply off-load this responsibility to the <ErrorMessage> component */}
         {/* <TextArea placeholder="Describe your issue"></TextArea> */}
         {/* Container <div> for defining a color for the SimpleMde component on hover */}
         {/* Instead of directly rendering the CustomSimpleMDE component which does not support application of props via obj destructuring notation, we take help of the Controller function  */}
         <CustomSimpleMDE borderColor="plum" borderWidth="2" control={control} />
-        {errors.description && (
-          <Text color="plum" as="div">
-            {errors.description.message}
-          </Text>
-        )}
+        {<ErrorMessage>{errors.description?.message}</ErrorMessage>}
+
+        {/** Offloading the checking of the presence of errors in the descr */}
+        {/* {errors.description && (
+          <ErrorMessage>{errors.description.message}</ErrorMessage>
+        )} */}
         <section className="max-w-xl">
           <Controller
             name="status"
