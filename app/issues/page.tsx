@@ -1,10 +1,12 @@
 import React, { Fragment } from "react";
-import { Button, Table } from "@radix-ui/themes";
-import Link from "next/link";
+import { Table } from "@radix-ui/themes";
+// import Link from "next/link";
 import prisma from "@/prisma/client";
 import IssueStatusBadge from "../components/IssueStatusBadge";
 import delay from "delay";
 import IssueActions from "./IssueActions";
+import Link from "../components/Link";
+// Now we use the custom Link component which marries both the 'radix-ui' stylized link component and the 'next/navigation' functional Link component
 
 const Issues = async () => {
   const issues = await prisma.issue.findMany();
@@ -38,6 +40,7 @@ const Issues = async () => {
                 <Table.Row key={i.id}>
                   <Table.Cell>
                     <Link href={`/issues/${i.id}`}>{i.title}</Link>
+                    {/* <Link href={`/issues/${i.id}`}>{i.title}</Link> */}
                     {/* <div className="block md:hidden">{i.status}</div> */}
                     <div className="block md:hidden">
                       <IssueStatusBadge status={i.status} />
