@@ -44,10 +44,8 @@ const page = async ({ params: { id } }: Props) => {
         Issue {issue?.id} | {issue?.title}
       </Heading>
       <div className="flex flex-row space-x-3">
-        <span>
-          <IssueStatusBadge status={issue!.status} />
-        </span>
-        <span>{issue?.createdAt.toLocaleString()}</span>
+        <IssueStatusBadge status={issue!.status} />
+        <Text size={"2"}>{issue?.createdAt.toLocaleString()}</Text>
       </div>
       <Blockquote size="2">{issue?.description}</Blockquote>
     </div>
