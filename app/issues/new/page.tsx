@@ -29,6 +29,22 @@ const page = () => {
   const [error, setError] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
   // console.log(register("status"));
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      setSubmitting(true);
+      console.log(data);
+      const response = await axios.post("/api/issues", data);
+    } catch (error: any) {
+      // catch (AxiosError: any) {
+      //   // alert(AxiosError.response.data.error[0]);
+      //   // console.log(AxiosError.response.data.error[0]);
+      // }
+      // console.log(error);
+      setError(JSON.stringify(error.response.data.error));
+    } finally {
+      setSubmitting(false);
+    }
+  });
   return (
     //For encapsulating the Callout UI component from the radix-ui library
     <div className="max-w-xl space-y-3">
@@ -40,25 +56,7 @@ const page = () => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className="max-w-xl space-y-3"
-        onSubmit={handleSubmit(async (data) => {
-          try {
-            setSubmitting(true);
-            console.log(data);
-            const response = await axios.post("/api/issues", data);
-          } catch (error: any) {
-            // catch (AxiosError: any) {
-            //   // alert(AxiosError.response.data.error[0]);
-            //   // console.log(AxiosError.response.data.error[0]);
-            // }
-            // console.log(error);
-            setError(JSON.stringify(error.response.data.error));
-          } finally {
-            setSubmitting(false);
-          }
-        })}
-      >
+      <form className="max-w-xl space-y-3" onSubmit={onSubmit}>
         <TextField.Root
           placeholder="Issue Title"
           autoFocus={true}
