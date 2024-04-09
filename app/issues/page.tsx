@@ -1,16 +1,16 @@
-import React, { Fragment } from "react";
 import { Table } from "@radix-ui/themes";
+import { Fragment } from "react";
 // import Link from "next/link";
 import prisma from "@/prisma/client";
-import IssueStatusBadge from "../components/IssueStatusBadge";
-import delay from "delay";
+// import IssueStatusBadge from "../components/IssueStatusBadge";
+// import Link from "../components/Link";
+import { IssueStatusBadge, Link } from "@/app/components"; //Simplifying Imports of multiple modules/components into a singular file without specifying the name of the module - index.ts
 import IssueActions from "./IssueActions";
-import Link from "../components/Link";
 // Now we use the custom Link component which marries both the 'radix-ui' stylized link component and the 'next/navigation' functional Link component
 
 const Issues = async () => {
   const issues = await prisma.issue.findMany();
-  await delay(2000);
+  // await delay(2000);
   return (
     <Fragment>
       {/* Modularizing and Abstracting it out */}
