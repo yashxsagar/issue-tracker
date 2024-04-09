@@ -1,23 +1,32 @@
 "use client";
-import CustomSimpleMDE from "@/app/components/CustomSimpleMDE";
-import { Button, RadioCards, TextField, Callout, Text } from "@radix-ui/themes";
-import "easymde/dist/easymde.min.css";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { Controller } from "react-hook-form";
-import axios from "axios";
-import { AxiosError } from "axios";
-import { ChangeEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createIssueSchema } from "@/app/validationSchemas";
+// import CustomSimpleMDE from "@/app/components/CustomSimpleMDE";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { createIssueSchema } from "@/app/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { Button, Callout, RadioCards, TextField } from "@radix-ui/themes";
+import axios from "axios";
 import delay from "delay";
+import "easymde/dist/easymde.min.css";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const CustomSimpleMDE = dynamic(
+  () => import("@/app/components/CustomSimpleMDE"),
+  {
+    ssr: false, //This disables pre-rendering on the server and is a fail-safe for in case you are trying to access certain browser APIs on the server they may not be available leading to errors
+    loading: () => {
+      return <p>Loading...</p>;
+    },
+  }
+);
 
 type IssueForm = z.infer<typeof createIssueSchema>; //Basically, we are letting zod infer the type of the useForm data object from the centrally defined back-end createIssueSchema defined at @/app/validationSchemas
-const page = async () => {
+const page = () => {
   const router = useRouter();
   const {
     register,
@@ -46,7 +55,7 @@ const page = async () => {
       setSubmitting(false);
     }
   });
-  await delay(2000);
+  // await delay(2000);
   return (
     //For encapsulating the Callout UI component from the radix-ui library
     <div className="max-w-xl space-y-3">

@@ -6,6 +6,7 @@ import classNames from "classnames";
 import dynamic from "next/dynamic";
 import { Controller } from "react-hook-form";
 import styles from "./CustomSimpleMDE.module.css";
+import "easymde/dist/easymde.min.css";
 // const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
 //   // loading: () => {
 //   //   return <p>Loading...</p>;
