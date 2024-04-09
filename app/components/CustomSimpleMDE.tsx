@@ -1,17 +1,17 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-// import SimpleMDE from "react-simplemde-editor";
+import SimpleMDE from "react-simplemde-editor";
 import classNames from "classnames";
 import dynamic from "next/dynamic";
 import { Controller } from "react-hook-form";
 import styles from "./CustomSimpleMDE.module.css";
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  loading: () => {
-    return <p>Loading...</p>;
-  },
-  ssr: false, //This disables pre-rendering on the server and is a fail-safe for in case you are trying to access certain browser APIs on the server they may not be available leading to errors
-});
+// const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+//   // loading: () => {
+//   //   return <p>Loading...</p>;
+//   // },
+//   ssr: false, //This disables pre-rendering on the server and is a fail-safe for in case you are trying to access certain browser APIs on the server they may not be available leading to errors
+// });
 interface Props {
   borderColor: string;
   borderWidth: string;

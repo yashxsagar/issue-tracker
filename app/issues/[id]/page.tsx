@@ -15,6 +15,7 @@ import { Issue } from "@prisma/client";
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import delay from "delay";
 
 type Props = {
   params: { id: string };
@@ -38,6 +39,7 @@ const page = async ({ params: { id } }: Props) => {
     notFound();
   }
 
+  await delay(2000);
   return (
     <div className="max-w-xl space-y-3">
       {/* {error && (

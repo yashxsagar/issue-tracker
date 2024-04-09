@@ -14,9 +14,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchemas";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import delay from "delay";
 
 type IssueForm = z.infer<typeof createIssueSchema>; //Basically, we are letting zod infer the type of the useForm data object from the centrally defined back-end createIssueSchema defined at @/app/validationSchemas
-const page = () => {
+const page = async () => {
   const router = useRouter();
   const {
     register,
@@ -45,6 +46,7 @@ const page = () => {
       setSubmitting(false);
     }
   });
+  await delay(2000);
   return (
     //For encapsulating the Callout UI component from the radix-ui library
     <div className="max-w-xl space-y-3">

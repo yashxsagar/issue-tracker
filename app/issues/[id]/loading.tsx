@@ -1,14 +1,34 @@
+import IssueStatusBadge from "@/app/components/IssueStatusBadge";
+import { Heading, Card, Text, Flex } from "@radix-ui/themes";
 import React from "react";
+import ReactMarkdown from "react-markdown";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const LoadingIssueDetailPage = () => {
   return (
-    <div
-      className="m-6 inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-plum motion-reduce:animate-[spin_1.5s_linear_infinite]"
-      role="status"
-    >
-      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-        Loading...
-      </span>
+    <div className="max-w-xl space-y-3">
+      <Flex className="space-x-3">
+        <Skeleton width={"8rem"} />
+        <Skeleton width={"25rem"} />
+      </Flex>
+      <div className="flex flex-row space-x-3">
+        <Skeleton width={"13rem"} />
+        {/* <Text size={"2"}>
+          <Skeleton />
+        </Text> */}
+        {/* <Skeleton width={"8rem"} /> */}
+      </div>
+      {/* <Blockquote size="2">{issue?.description}</Blockquote> */}
+      {/* We want to ideally use react-markdown component in order to make the user specified 'markdown' in the issue's description field visible here */}
+      <Card className="prose" variant="classic">
+        {/* <Blockquote size={"2"}> */}
+        {/* <ReactMarkdown>
+          <Skeleton />
+        </ReactMarkdown> */}
+        {/* </Blockquote> */}
+        <Skeleton count={3} />
+      </Card>
     </div>
   );
 };
