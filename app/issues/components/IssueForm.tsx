@@ -48,7 +48,11 @@ const IssueForm = ({ issue }: Props) => {
     try {
       setSubmitting(true);
       console.log(data);
-      const response = await axios.post("/api/issues", data);
+      if (issue) {
+        await axios.patch(`/api/issues/${issue.id}`, data);
+      } else {
+        const response = await axios.post("/api/issues", data);
+      }
     } catch (error: any) {
       // catch (AxiosError: any) {
       //   // alert(AxiosError.response.data.error[0]);
@@ -129,7 +133,7 @@ const IssueForm = ({ issue }: Props) => {
           <RadioCards.Item value="CLOSED">Closed</RadioCards.Item>
         </RadioCards.Root> */}
         <Button type="submit" disabled={isSubmitting}>
-          Submit Issue
+          {(issue && "Update Issue") || "Submit Issue"}{" "}
           {isSubmitting && <LoadingSpinner />}
         </Button>
       </form>
