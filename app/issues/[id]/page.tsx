@@ -22,6 +22,8 @@ import ReactMarkdown from "react-markdown";
 import delay from "delay";
 import { Pencil2Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import EditIssueButton from "./EditIssueButton";
+import IssueDetails from "./IssueDetails";
 
 type Props = {
   params: { id: string };
@@ -58,26 +60,14 @@ const page = async ({ params: { id } }: Props) => {
         </Callout.Root>
       )} */}
       <Box>
-        <Heading>
-          Issue {issue?.id} | {issue?.title}
-        </Heading>
-        <Flex className="space-x-3" my="3">
-          <IssueStatusBadge status={issue!.status} />
-          <Text size={"2"}>{issue?.createdAt.toLocaleString()}</Text>
-        </Flex>
-        {/* <Blockquote size="2">{issue?.description}</Blockquote> */}
-        {/* We want to ideally use react-markdown component in order to make the user specified 'markdown' in the issue's description field visible here */}
-        <Card className="prose" variant="classic">
-          {/* <Blockquote size={"2"}> */}
-          <ReactMarkdown>{issue?.description}</ReactMarkdown>
-          {/* </Blockquote> */}
-        </Card>
+        <IssueDetails issue={issue} />
       </Box>
       <Box>
-        <Button>
+        <EditIssueButton issueId={issue.id} />
+        {/* <Button>
           <Pencil2Icon />
           <Link href={`/issues/${issue.id}/edit`}></Link>Edit Issue
-        </Button>
+        </Button> */}
       </Box>
     </Grid>
   );
