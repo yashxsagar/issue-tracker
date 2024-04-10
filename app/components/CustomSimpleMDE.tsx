@@ -17,9 +17,15 @@ interface Props {
   borderColor: string;
   borderWidth: string;
   //   hookFormInstance: any;
+  defaultValue?: string;
   control: any;
 }
-const CustomSimpleMDE = ({ borderColor, borderWidth, control }: Props) => {
+const CustomSimpleMDE = ({
+  borderColor,
+  borderWidth,
+  control,
+  defaultValue,
+}: Props) => {
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = () => {
     setIsFocused(true);
@@ -42,6 +48,7 @@ const CustomSimpleMDE = ({ borderColor, borderWidth, control }: Props) => {
       <Controller
         name="description"
         control={control}
+        defaultValue={defaultValue}
         render={({ field: { onChange, value } }) => (
           <SimpleMDE
             placeholder="Describe your issue"
