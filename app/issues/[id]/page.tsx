@@ -48,6 +48,7 @@ const page = async ({ params: { id } }: Props) => {
   }
 
   await delay(2000);
+  //This page is now only responsible for laying out the various elements/details of an issue and we offload the logic of generating the UI/formatting for various issue elements that are co-located with this page route
   return (
     <Grid columns={{ initial: "1", md: "2" }} gap={"3"}>
       {/* maxWidth={"50vw"} */}
