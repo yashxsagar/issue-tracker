@@ -1,0 +1,4 @@
+.issueFormButton {
+  background-color: var(--accent-9); /* Replace with your desired color */
+  color: var(--accent-contrast); /* Replace with your desired contrast color */
+}

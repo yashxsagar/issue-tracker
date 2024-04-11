@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import styles from "./IssueForm.module.css";
 
 const CustomSimpleMDE = dynamic(
   () => import("@/app/components/CustomSimpleMDE"),
@@ -62,6 +63,10 @@ const IssueForm = ({ issue }: Props) => {
       setError(JSON.stringify(error.response.data.error));
     } finally {
       setSubmitting(false);
+      setTimeout(() => {
+        router.push("/issues");
+        router.refresh(); //This tells Next.js to refresh the contents of the current route forcibly before the cache invalidation period
+      }, 3000);
     }
   });
   // await delay(2000);
@@ -105,7 +110,7 @@ const IssueForm = ({ issue }: Props) => {
           <Controller
             name="status"
             control={control}
-            defaultValue={issue?.status}
+            defaultValue={issue?.status || "OPEN"}
             // Set default value if needed
             render={({ field: { name, ref, value, onBlur, onChange } }) => (
               <RadioCards.Root
@@ -132,7 +137,13 @@ const IssueForm = ({ issue }: Props) => {
           <RadioCards.Item value="IN_PROGRESS">In Progress</RadioCards.Item>
           <RadioCards.Item value="CLOSED">Closed</RadioCards.Item>
         </RadioCards.Root> */}
-        <Button type="submit" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          className={
+            (!isSubmitting && `${styles.issueFormButton}`) || undefined
+          }
+          disabled={isSubmitting}
+        >
           {(issue && "Update Issue") || "Submit Issue"}{" "}
           {isSubmitting && <LoadingSpinner />}
         </Button>

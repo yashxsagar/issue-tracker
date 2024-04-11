@@ -66,4 +66,6 @@ const Issues = async () => {
   );
 };
 
+export const dynamic = "force-dynamic"; //This is to make Next.js opt out of static rendering of this page route
+export const revalidate = 0; //Exactly the same as setting the const dynamic= 'force-dynamic'
 export default Issues;
