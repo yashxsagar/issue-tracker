@@ -9,6 +9,7 @@ import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { Button, Callout, RadioCards, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import delay from "delay";
+import CustomSimpleMDE from "@/app/components/CustomSimpleMDE";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -17,15 +18,16 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import styles from "./IssueForm.module.css";
 
-const CustomSimpleMDE = dynamic(
-  () => import("@/app/components/CustomSimpleMDE"),
-  {
-    ssr: false, //This disables pre-rendering on the server and is a fail-safe for in case you are trying to access certain browser APIs on the server they may not be available leading to errors
-    loading: () => {
-      return <p>Loading...</p>;
-    },
-  }
-);
+//Now the entire page <IssueForm> has been set to dynamically lazy load with ssr set to false
+// const CustomSimpleMDE = dynamic(
+//   () => import("@/app/components/CustomSimpleMDE"),
+//   {
+//     ssr: false, //This disables pre-rendering on the server and is a fail-safe for in case you are trying to access certain browser APIs on the server they may not be available leading to errors
+//     loading: () => {
+//       return <p>Loading...</p>;
+//     },
+//   }
+// );
 
 interface Props {
   issue?: Issue;
