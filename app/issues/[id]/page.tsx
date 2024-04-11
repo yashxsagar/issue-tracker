@@ -24,6 +24,7 @@ import { Pencil2Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
+import DeleteIssueButton from "./DeleteIssueButton";
 
 type Props = {
   params: { id: string };
@@ -50,7 +51,8 @@ const page = async ({ params: { id } }: Props) => {
   await delay(2000);
   //This page is now only responsible for laying out the various elements/details of an issue and we offload the logic of generating the UI/formatting for various issue elements that are co-located with this page route
   return (
-    <Grid columns={{ initial: "1", md: "2" }} gap={"3"}>
+    <Grid columns={{ initial: "1", sm: "5" }} gap={"3"}>
+      {/* sm: stands for small in 'radix-ui' and is used for tablets */}
       {/* maxWidth={"50vw"} */}
       {/* {error && (
         <Callout.Root variant="surface" color="plum">
@@ -60,15 +62,20 @@ const page = async ({ params: { id } }: Props) => {
           </Callout.Text>
         </Callout.Root>
       )} */}
-      <Box>
+      {/* Note lg (laptops) in Tailwind CSS is the same as md in 'radix-ui', Also md in Tailwind CSS is the analaogous to sm in 'radix-ui' */}
+      <Box className="md:col-span-4">
         <IssueDetails issue={issue} />
       </Box>
-      <Box>
-        <EditIssueButton issueId={issue.id} />
-        {/* <Button>
+      <Box className={"md:col-span-1"}>
+        {/* Using a flex to stack the buttons vertically */}
+        <Flex direction={"column"} gap={"4"}>
+          <EditIssueButton issueId={issue.id} />
+          {/* <Button>
           <Pencil2Icon />
           <Link href={`/issues/${issue.id}/edit`}></Link>Edit Issue
         </Button> */}
+          <DeleteIssueButton issueId={issue.id} />
+        </Flex>
       </Box>
     </Grid>
   );

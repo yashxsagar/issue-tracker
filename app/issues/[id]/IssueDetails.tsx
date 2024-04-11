@@ -21,7 +21,7 @@ const IssueDetails = ({
       </Flex>
       {/* <Blockquote size="2">{issue?.description}</Blockquote> */}
       {/* We want to ideally use react-markdown component in order to make the user specified 'markdown' in the issue's description field visible here */}
-      <Card className="prose" variant="classic">
+      <Card className="prose max-w-full" variant="classic">
         {/* <Blockquote size={"2"}> */}
         <ReactMarkdown>{description}</ReactMarkdown>
         {/* </Blockquote> */}
