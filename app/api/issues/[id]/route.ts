@@ -3,6 +3,7 @@ import { Issue } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { any, z } from "zod";
+import delay from "delay";
 export async function PATCH(
   request: NextRequest,
   { params: { id } }: { params: { id: string } }
@@ -70,6 +71,7 @@ export async function DELETE(
 ) {
   let issue = {} as Issue | null;
   // let body = undefined;
+  await delay(1000); //This is done in order to improve the User Experience for the delete action
   if (isNaN(Number(id))) {
     return NextResponse.json(
       { error: `No such Issue Object with the Id: ${id} found!` },
