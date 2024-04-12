@@ -69,7 +69,13 @@ export async function DELETE(
   { params: { id } }: { params: { id: string } }
 ) {
   let issue = {} as Issue | null;
-  let body = undefined;
+  // let body = undefined;
+  if (isNaN(Number(id))) {
+    return NextResponse.json(
+      { error: `No such Issue Object with the Id: ${id} found!` },
+      { status: 404, statusText: "Resource not found" }
+    );
+  }
   try {
     issue = await prisma.issue.findUnique({ where: { id: parseInt(id) } });
   } catch (error: any) {
@@ -84,24 +90,6 @@ export async function DELETE(
       { status: 404, statusText: "Resource not found" }
     );
   }
-  if (request.body !== null) {
-    try {
-      body = await request.json();
-    } catch (error: any) {
-      return NextResponse.json(
-        {
-          error: `Please don't provide a body in the DEL request for issue: ${id}`,
-        },
-        { status: 400, statusText: "Invalid Request Object" }
-      );
-    }
-    if (Object.getOwnPropertyNames(issue).length !== 0) {
-      return NextResponse.json(
-        { error: "The DEL request body should not contain any data" },
-        { status: 400, statusText: "Invalid Request" }
-      );
-    }
-  }
 
   const deletedIssue = await prisma.issue.delete({
     where: { id: issue?.id },
@@ -110,4 +98,33 @@ export async function DELETE(
     { message: "Issue deleted successfully", deletedIssue: deletedIssue },
     { status: 200, statusText: "Deletion Successful" }
   );
+
+  // Analysis of the request object body in order to determine that it's null/empty or not -->
+  // Currently fetching a bunch of errors in PostMan and axios.delete() call via the DeleteIssueButton.tsx
+  // if (request.body) {
+  //   try {
+  //     body = await request.json();
+  //   } catch (error: any) {
+  //     if (body == undefined || body == null) {
+  //       return NextResponse.json(
+  //         {
+  //           error: `Please don't provide a body in the DEL request for issue: ${id}`,
+  //         },
+  //         { status: 400, statusText: "Invalid Request Object" }
+  //       );
+  //     }
+  //     return NextResponse.json(
+  //       {
+  //         error: `Please don't provide a body in the DEL request for issue: ${id}`,
+  //       },
+  //       { status: 400, statusText: "Invalid Request Object" }
+  //     );
+  //   }
+  //   if (Object.getOwnPropertyNames(body).length !== 0) {
+  //     return NextResponse.json(
+  //       { error: "The DEL request body should not contain any data" },
+  //       { status: 400, statusText: "Invalid Request" }
+  //     );
+  //   }
+  // }
 }
