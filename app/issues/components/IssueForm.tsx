@@ -66,7 +66,7 @@ const IssueForm = ({ issue }: Props) => {
     } finally {
       setSubmitting(false);
       setTimeout(() => {
-        router.push("/issues");
+        router.push("/issues/list");
         router.refresh(); //This tells Next.js to refresh the contents of the current route forcibly before the cache invalidation period
       }, 3000);
     }
