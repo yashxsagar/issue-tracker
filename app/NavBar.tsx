@@ -51,10 +51,20 @@ const NavBar = () => {
           </Flex>
           <Box>
             {status === "authenticated" && (
-              <Link href="/api/auth/signout">Logout</Link>
+              <Link
+                href="/api/auth/signout"
+                className="text-zinc-400 hover:text-zinc-800 transition-colors"
+              >
+                Logout
+              </Link>
             )}
             {status === "unauthenticated" && (
-              <Link href="api/auth/signin">Login</Link>
+              <Link
+                href="/api/auth/signin"
+                className="text-zinc-400 hover:text-zinc-800 transition-colors"
+              >
+                Login
+              </Link>
             )}
           </Box>
         </Flex>
