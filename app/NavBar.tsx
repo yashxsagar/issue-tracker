@@ -5,7 +5,15 @@ import { IoBugOutline } from "react-icons/io5";
 import { usePathname } from "next/navigation"; //it is a Next js hook that uses the browser API to fetch the current active page URL/pathname
 import classNames from "classnames"; //this is a function that accepts a n object literal of key:value pairs
 import { useSession } from "next-auth/react";
-import { Box, Container, Flex } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Container,
+  DropdownMenu,
+  Flex,
+  Text,
+} from "@radix-ui/themes";
+import { MdFaceRetouchingNatural } from "react-icons/md";
 
 const NavBar = () => {
   const { status, data: session } = useSession();
@@ -51,12 +59,43 @@ const NavBar = () => {
           </Flex>
           <Box>
             {status === "authenticated" && (
-              <Link
-                href="/api/auth/signout"
-                className="text-zinc-400 hover:text-zinc-800 transition-colors"
-              >
-                Logout
-              </Link>
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Avatar
+                    src={session.user!.image!}
+                    fallback="?"
+                    size={"3"}
+                    radius="full"
+                    className="cursor-pointer"
+                  ></Avatar>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content side="left">
+                  <DropdownMenu.Label>
+                    <Text size="3" color="gray">
+                      {session.user!.name!}
+                    </Text>
+                  </DropdownMenu.Label>
+                  <DropdownMenu.Label>
+                    <Text size="3" color="gray">
+                      {session.user!.email!}
+                    </Text>
+                  </DropdownMenu.Label>
+                  <DropdownMenu.Item>
+                    <Link
+                      href="/api/auth/signout"
+                      // className="text-gray-500 text-base hover:text-white"
+                    >
+                      Logout
+                    </Link>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+              // <Link
+              //   href="/api/auth/signout"
+              //   className="text-zinc-400 hover:text-zinc-800 transition-colors"
+              // >
+              //   Logout
+              // </Link>
             )}
             {status === "unauthenticated" && (
               <Link
