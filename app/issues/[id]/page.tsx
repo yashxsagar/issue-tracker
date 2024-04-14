@@ -27,6 +27,7 @@ import IssueDetails from "./IssueDetails";
 import DeleteIssueButton from "./DeleteIssueButton";
 import { getServerSession } from "next-auth";
 import authOptions from "@/app/auth/authOptions";
+import AssigneeSelect from "./AssigneeSelect";
 
 type Props = {
   params: { id: string };
@@ -73,6 +74,7 @@ const IssueDetailPage = async ({ params: { id } }: Props) => {
         <Box className={"md:col-span-1"}>
           {/* Using a flex to stack the buttons vertically */}
           <Flex direction={"column"} gap={"4"}>
+            <AssigneeSelect />
             <EditIssueButton issueId={issue.id} />
             {/* <Button>
           <Pencil2Icon />
