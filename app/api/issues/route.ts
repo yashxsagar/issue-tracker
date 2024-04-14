@@ -3,9 +3,21 @@ import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createIssueSchema } from "../../validationSchemas";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/auth/authOptions";
 
 export async function POST(request: NextRequest) {
   let body = {} as z.infer<typeof createIssueSchema>;
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      {
+        message:
+          "You are not authorized to create a new Issue. Please review the Autnetication Header and Cookies",
+      },
+      { status: 401, statusText: "Unauthorized" }
+    );
+  }
   try {
     body = await request.json();
   } catch (error) {

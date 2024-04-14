@@ -4,12 +4,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { any, z } from "zod";
 import delay from "delay";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/auth/authOptions";
 export async function PATCH(
   request: NextRequest,
   { params: { id } }: { params: { id: string } }
 ) {
   let issue = {} as Issue | null;
   let body = {} as z.infer<typeof createIssueSchema>;
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      {
+        message:
+          "You are not authorized to updated Issues. Please review the Autnetication Header and Cookies",
+      },
+      { status: 401, statusText: "Unauthorized" }
+    );
+  }
   try {
     issue = await prisma.issue.findUnique({ where: { id: parseInt(id) } });
     // const body = await request.json();
@@ -71,6 +83,16 @@ export async function DELETE(
 ) {
   let issue = {} as Issue | null;
   // let body = undefined;
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json(
+      {
+        message:
+          "You are not authorized to delete issues. Please review the Autnetication Header and Cookies",
+      },
+      { status: 401, statusText: "Unauthorized" }
+    );
+  }
   await delay(1000); //This is done in order to improve the User Experience for the delete action
   if (isNaN(Number(id))) {
     return NextResponse.json(

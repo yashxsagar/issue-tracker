@@ -25,11 +25,14 @@ import Link from "next/link";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
 import DeleteIssueButton from "./DeleteIssueButton";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/auth/authOptions";
 
 type Props = {
   params: { id: string };
 };
-const page = async ({ params: { id } }: Props) => {
+const IssueDetailPage = async ({ params: { id } }: Props) => {
+  const session = await getServerSession(authOptions);
   //   const [error, setError] = useState("");
   //   if (typeof parseInt(id) == "integer") {
   //     notFound();
@@ -66,19 +69,21 @@ const page = async ({ params: { id } }: Props) => {
       <Box className="md:col-span-4">
         <IssueDetails issue={issue} />
       </Box>
-      <Box className={"md:col-span-1"}>
-        {/* Using a flex to stack the buttons vertically */}
-        <Flex direction={"column"} gap={"4"}>
-          <EditIssueButton issueId={issue.id} />
-          {/* <Button>
+      {session && (
+        <Box className={"md:col-span-1"}>
+          {/* Using a flex to stack the buttons vertically */}
+          <Flex direction={"column"} gap={"4"}>
+            <EditIssueButton issueId={issue.id} />
+            {/* <Button>
           <Pencil2Icon />
           <Link href={`/issues/${issue.id}/edit`}></Link>Edit Issue
         </Button> */}
-          <DeleteIssueButton issueId={issue.id} />
-        </Flex>
-      </Box>
+            <DeleteIssueButton issueId={issue.id} />
+          </Flex>
+        </Box>
+      )}
     </Grid>
   );
 };
 
-export default page;
+export default IssueDetailPage;
