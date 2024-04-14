@@ -67,6 +67,7 @@ const NavBar = () => {
                     size={"3"}
                     radius="full"
                     className="cursor-pointer"
+                    referrerPolicy="no-referrer"
                   ></Avatar>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content side="left">
