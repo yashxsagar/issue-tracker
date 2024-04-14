@@ -16,13 +16,6 @@ import {
 import { MdFaceRetouchingNatural } from "react-icons/md";
 
 const NavBar = () => {
-  const { status, data: session } = useSession();
-  const currentPathname = usePathname();
-  let links = [
-    { label: "Dashboard", href: "/" },
-    { label: "Issues", href: "/issues/list" },
-  ];
-  console.log(currentPathname);
   return (
     <nav className="border-b mb-5 px-10 py-6 h-20 ">
       <Container>
@@ -33,84 +26,104 @@ const NavBar = () => {
             <Link href="/">
               <IoBugOutline size={18} color={"#8E4585"} />
             </Link>
-            <ul className="flex flex-row space-x-6">
-              {links.map((link) => {
-                return (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      //   className={`${
-                      //     (link.href === currentPathname && "text-zinc-900") ||
-                      //     "text-zinc-400"
-                      //   } hover:text-zinc-800  transition-colors `}
-                      //Using the classNames function imported from the classNames module/package
-                      className={classNames({
-                        "text-zinc-900": link.href === currentPathname,
-                        "text-zinc-400": link.href !== currentPathname,
-                        "hover:text-zinc-800 transition-colors": true, //Render regardles of any condition
-                      })}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            <NavLinks />
           </Flex>
-          <Box>
-            {status === "authenticated" && (
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger>
-                  <Avatar
-                    src={session.user!.image!}
-                    fallback="?"
-                    size={"3"}
-                    radius="full"
-                    className="cursor-pointer"
-                    referrerPolicy="no-referrer"
-                  ></Avatar>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content side="left">
-                  <DropdownMenu.Label>
-                    <Text size="3" color="gray">
-                      {session.user!.name!}
-                    </Text>
-                  </DropdownMenu.Label>
-                  <DropdownMenu.Label>
-                    <Text size="3" color="gray">
-                      {session.user!.email!}
-                    </Text>
-                  </DropdownMenu.Label>
-                  <DropdownMenu.Item>
-                    <Link
-                      href="/api/auth/signout"
-                      // className="text-gray-500 text-base hover:text-white"
-                    >
-                      Logout
-                    </Link>
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-              // <Link
-              //   href="/api/auth/signout"
-              //   className="text-zinc-400 hover:text-zinc-800 transition-colors"
-              // >
-              //   Logout
-              // </Link>
-            )}
-            {status === "unauthenticated" && (
-              <Link
-                href="/api/auth/signin"
-                className="text-zinc-400 hover:text-zinc-800 transition-colors"
-              >
-                Login
-              </Link>
-            )}
-          </Box>
+          <AuthStatus />
         </Flex>
       </Container>
     </nav>
   );
 };
 
+//All the logic for rendering Navigation Links
+const NavLinks = () => {
+  const currentPathname = usePathname();
+  let links = [
+    { label: "Dashboard", href: "/" },
+    { label: "Issues", href: "/issues/list" },
+  ];
+  console.log(currentPathname);
+  return (
+    <ul className="flex flex-row space-x-6">
+      {links.map((link) => {
+        return (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              //   className={`${
+              //     (link.href === currentPathname && "text-zinc-900") ||
+              //     "text-zinc-400"
+              //   } hover:text-zinc-800  transition-colors `}
+              //Using the classNames function imported from the classNames module/package
+              className={classNames({
+                "nav-link": true, //Defined in the globals.css file
+                "!text-zinc-900": link.href === currentPathname,
+              })}
+            >
+              {link.label}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
+
+//All the logic for rendering conditionally the Auth Status of a user - anonymous or otherwise
+const AuthStatus = () => {
+  const { status, data: session } = useSession();
+  if (status === "loading") {
+    return null;
+  }
+  if (status === "unauthenticated") {
+    return (
+      <Link href="/api/auth/signin" className="nav-link">
+        Login
+      </Link>
+    );
+  }
+
+  return (
+    <Box>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <Avatar
+            src={session!.user!.image!}
+            fallback="?"
+            size={"3"}
+            radius="full"
+            className="cursor-pointer"
+            referrerPolicy="no-referrer"
+          ></Avatar>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content side="left">
+          <DropdownMenu.Label>
+            <Text size="3" color="gray">
+              {session!.user!.name!}
+            </Text>
+          </DropdownMenu.Label>
+          <DropdownMenu.Label>
+            <Text size="3" color="gray">
+              {session!.user!.email!}
+            </Text>
+          </DropdownMenu.Label>
+          <DropdownMenu.Item>
+            <Link
+              href="/api/auth/signout"
+              // className="text-gray-500 text-base hover:text-white"
+            >
+              Logout
+            </Link>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+      {/* // <Link
+        //   href="/api/auth/signout"
+        //   className="text-zinc-400 hover:text-zinc-800 transition-colors"
+        // >
+        //   Logout
+        // </Link> */}
+    </Box>
+  );
+};
 export default NavBar;
