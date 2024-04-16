@@ -1,17 +1,18 @@
+import authOptions from "@/app/auth/authOptions";
+import { patchIssueSchema } from "@/app/validationSchemas";
 import prisma from "@/prisma/client";
 import { Issue } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
-import { createIssueSchema } from "@/app/validationSchemas";
-import { any, z } from "zod";
 import delay from "delay";
 import { getServerSession } from "next-auth";
-import authOptions from "@/app/auth/authOptions";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 export async function PATCH(
   request: NextRequest,
   { params: { id } }: { params: { id: string } }
 ) {
   let issue = {} as Issue | null;
-  let body = {} as z.infer<typeof createIssueSchema>;
+  // let body = {} as z.infer<typeof createIssueSchema>;
+  let body = {} as z.infer<typeof patchIssueSchema>;
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json(
@@ -51,12 +52,30 @@ export async function PATCH(
       { status: 400, statusText: "Invalid Object" }
     );
   }
-  const validation = createIssueSchema.safeParse(body);
+  if (Object.keys(body).length == 0) {
+    return NextResponse.json(
+      { error: "No changes/ammendments defined in the PATCH request body" },
+      { status: 400 }
+    );
+  }
+  const validation = patchIssueSchema.safeParse(body);
   if (!validation.success) {
     return NextResponse.json(
       { error: validation.error.format() },
       { status: 400, statusText: "Inavalid Request" }
     );
+  }
+
+  if (body.assignedToUserId) {
+    const user = await prisma.user.findUnique({
+      where: { id: body.assignedToUserId },
+    });
+    if (!user) {
+      return NextResponse.json(
+        { message: "User not found/Invalid User" },
+        { status: 404, statusText: "Resource not found" }
+      );
+    }
   }
 
   const updatedIssue = await prisma.issue.update({
@@ -65,6 +84,7 @@ export async function PATCH(
       title: body.title,
       description: body.description,
       status: body.status,
+      assignedToUserId: body.assignedToUserId,
     },
   });
 
