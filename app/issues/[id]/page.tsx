@@ -74,7 +74,7 @@ const IssueDetailPage = async ({ params: { id } }: Props) => {
         <Box className={"md:col-span-1"}>
           {/* Using a flex to stack the buttons vertically */}
           <Flex direction={"column"} gap={"4"}>
-            <AssigneeSelect />
+            <AssigneeSelect issue={issue} />
             <EditIssueButton issueId={issue.id} />
             {/* <Button>
           <Pencil2Icon />
