@@ -2,7 +2,7 @@
 import { Status } from "@prisma/client";
 import { Box, RadioCards, Flex, Text } from "@radix-ui/themes";
 import React from "react";
-
+import { useRouter } from "next/navigation";
 const statuses: {
   label: string;
   value?: Status;
@@ -14,17 +14,26 @@ const statuses: {
   { label: "Closed", value: "CLOSED", color: "green" },
 ];
 
-const IssueStatusFilter = () => {
+const IssueStatusFilter = ({
+  selectedStatus,
+}: {
+  selectedStatus: Status | undefined;
+}) => {
+  const router = useRouter();
   return (
     <Box>
       <RadioCards.Root
         size="1"
-        defaultValue=""
+        defaultValue={selectedStatus || ""}
         columns={{ initial: "1", sm: "3", md: "4" }}
+        onValueChange={(status) => {
+          const query = status ? `?status=${status}` : "";
+          router.push(`/issues/list/${query}`);
+        }}
       >
         {statuses.map((s, index) => {
           return (
-            <RadioCards.Item key={s.value} value={s.value || ""}>
+            <RadioCards.Item key={s.value || ""} value={s.value || ""}>
               <Text color={s.color || undefined}>{s.label} </Text>
             </RadioCards.Item>
           );

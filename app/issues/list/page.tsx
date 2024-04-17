@@ -6,10 +6,19 @@ import prisma from "@/prisma/client";
 // import Link from "../components/Link";
 import { IssueStatusBadge, Link } from "@/app/components"; //Simplifying Imports of multiple modules/components into a singular file without specifying the name of the module - index.ts
 import IssueActions from "./IssueActions";
+import { Status } from "@prisma/client";
 // Now we use the custom Link component which marries both the 'radix-ui' stylized link component and the 'next/navigation' functional Link component
 
-const Issues = async () => {
-  const issues = await prisma.issue.findMany();
+interface Props {
+  // searchParams: { status: "OPEN" | "IN_PROGRESS" | "CLOSED" };
+  searchParams: { status: Status };
+}
+const Issues = async ({ searchParams: { status } }: Props) => {
+  const statuses = Object.values(Status);
+  const validStatus = statuses.includes(status);
+  const issues = await prisma.issue.findMany({
+    where: { status: validStatus ? status : undefined },
+  });
   // await delay(2000);
   return (
     <Fragment>
@@ -20,7 +29,7 @@ const Issues = async () => {
           <Link href="/issues/new">New Issue</Link>
         </Button>
       </div> */}
-      <IssueActions />
+      <IssueActions selectedStatus={validStatus ? status : undefined} />
       <div className="m-6">
         <Table.Root variant="surface">
           <Table.Header>
