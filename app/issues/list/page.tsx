@@ -18,9 +18,6 @@ interface Props {
 const Issues = async ({ searchParams: { status, orderBy } }: Props) => {
   const statuses = Object.values(Status);
   const validStatus = statuses.includes(status);
-  const issues = await prisma.issue.findMany({
-    where: { status: validStatus ? status : undefined },
-  });
   const columns: {
     label: string;
     value: keyof Issue;
@@ -41,6 +38,17 @@ const Issues = async ({ searchParams: { status, orderBy } }: Props) => {
       className: "hidden md:table-cell",
     },
   ];
+  const orderByObject = columns.map((c) => c.value).includes(orderBy)
+    ? { [orderBy]: "asc" }
+    : undefined;
+  const issues = await prisma.issue.findMany({
+    where: { status: validStatus ? status : undefined },
+    orderBy: orderByObject,
+    // orderBy: {
+    //   [orderBy]: "asc",
+    // },
+  });
+
   // await delay(2000);
   return (
     <Fragment>
