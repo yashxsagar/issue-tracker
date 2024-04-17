@@ -14,16 +14,8 @@ import toast, { Toaster } from "react-hot-toast";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const [isAssigning, setIsAssigning] = useState(false);
-  const {
-    data: users,
-    isLoading,
-    error,
-  } = useQuery<User[], Error>({
-    queryKey: ["users"],
-    queryFn: () => axios.get("/api/users").then((res) => res.data),
-    staleTime: 60 * 1000, //60s
-    retry: 3, //reactQuery will try automartically upto 3 times to fetch the data upon encountering any error(s)
-  });
+  const { data: users, isLoading, error } = useUsers();
+  //We have refactored out the useQuery hook at the bottom of this component as usUsers() custom hook
   const [selectedUserId, setSelectedUserId] = useState<string | null>(
     (issue.assignedToUserId &&
       users?.find((user) => {
@@ -71,32 +63,92 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   if (isLoading) {
     return <Skeleton />;
   }
+
+  const assignIssue = async (userId: string) => {
+    let updatedIssue = {} as Issue;
+    setSelectedUserId(userId);
+    setIsAssigning(true);
+    // delay(1000);
+    try {
+      updatedIssue = await axios.patch(`/api/issues/${issue.id}`, {
+        assignedToUserId: userId === "unassigned" ? null : userId,
+      });
+    } catch (error: any) {
+      toast.error("New user could not be assigned!");
+      console.log(error.response.data.errors);
+    } finally {
+      setIsAssigning(false);
+      if (Object.keys(updatedIssue).length > 3) {
+        if (userId === "unassigned") {
+          toast("User unassigned");
+        } else {
+          toast.success(`New user assigned to Issue ${issue.id}`);
+        }
+      }
+    }
+  };
+  const renderUsers = () => {
+    return (
+      users &&
+      users?.map((user, index) => (
+        <Select.Item
+          key={user.id}
+          value={user.id}
+          onSelect={() => {
+            console.log("Assigned user nullified");
+            if (selectedUserId === user.id) {
+              try {
+                axios.patch(`/api/issues/${issue.id}`, {
+                  assignedToUserId: null,
+                });
+              } catch (error: any) {
+                console.log(error.response.data.errors);
+              } finally {
+                console.log("Assigned user nullified");
+              }
+            }
+          }}
+        >
+          {users?.filter((u) => u.name == user.name).length > 1 ? (
+            <HoverCard.Root>
+              <HoverCard.Trigger>
+                <Flex justify="between" width="11rem">
+                  <Text>
+                    {user.name} {isAssigning && <LoadingSpinner />}
+                  </Text>
+                  <DotFilledIcon color={"plum"} height={"22"} />
+                </Flex>
+              </HoverCard.Trigger>
+              <HoverCard.Content
+                //   maxWidth="300px"
+                size={"1"}
+                side="right"
+                //   height={"50px"}
+                align="center"
+                style={{
+                  backgroundColor: "white",
+                  color: "plum",
+                  borderStyle: "solid",
+                  borderWidth: "1px",
+                  borderColor: "plum",
+                }}
+              >
+                <Text>{user.email}</Text>
+              </HoverCard.Content>
+            </HoverCard.Root>
+          ) : (
+            <Text>
+              {user.name} {isAssigning && <LoadingSpinner />}
+            </Text>
+          )}
+        </Select.Item>
+      ))
+    );
+  };
   return (
     <>
       <Select.Root
-        onValueChange={async (userId) => {
-          let updatedIssue = {} as Issue;
-          setSelectedUserId(userId);
-          setIsAssigning(true);
-          // delay(1000);
-          try {
-            updatedIssue = await axios.patch(`/api/issues/${issue.id}`, {
-              assignedToUserId: userId === "unassigned" ? null : userId,
-            });
-          } catch (error: any) {
-            toast.error("New user could not be assigned!");
-            console.log(error.response.data.errors);
-          } finally {
-            setIsAssigning(false);
-            if (Object.keys(updatedIssue).length > 3) {
-              if (userId === "unassigned") {
-                toast("User unassigned");
-              } else {
-                toast.success(`New user assigned to Issue ${issue.id}`);
-              }
-            }
-          }
-        }}
+        onValueChange={assignIssue}
         defaultValue={
           (issue.assignedToUserId &&
             users?.find((user) => {
@@ -115,60 +167,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
                 <Text>Unassigned</Text> <HiUserRemove color={"plum"} />
               </Flex>
             </Select.Item>
-            {users &&
-              users?.map((user, index) => (
-                <Select.Item
-                  key={user.id}
-                  value={user.id}
-                  onSelect={() => {
-                    console.log("Assigned user nullified");
-                    if (selectedUserId === user.id) {
-                      try {
-                        axios.patch(`/api/issues/${issue.id}`, {
-                          assignedToUserId: null,
-                        });
-                      } catch (error: any) {
-                        console.log(error.response.data.errors);
-                      } finally {
-                        console.log("Assigned user nullified");
-                      }
-                    }
-                  }}
-                >
-                  {users?.filter((u) => u.name == user.name).length > 1 ? (
-                    <HoverCard.Root>
-                      <HoverCard.Trigger>
-                        <Flex justify="between" width="11rem">
-                          <Text>
-                            {user.name} {isAssigning && <LoadingSpinner />}
-                          </Text>
-                          <DotFilledIcon color={"plum"} height={"22"} />
-                        </Flex>
-                      </HoverCard.Trigger>
-                      <HoverCard.Content
-                        //   maxWidth="300px"
-                        size={"1"}
-                        side="right"
-                        //   height={"50px"}
-                        align="center"
-                        style={{
-                          backgroundColor: "white",
-                          color: "plum",
-                          borderStyle: "solid",
-                          borderWidth: "1px",
-                          borderColor: "plum",
-                        }}
-                      >
-                        <Text>{user.email}</Text>
-                      </HoverCard.Content>
-                    </HoverCard.Root>
-                  ) : (
-                    <Text>
-                      {user.name} {isAssigning && <LoadingSpinner />}
-                    </Text>
-                  )}
-                </Select.Item>
-              ))}
+            {renderUsers()}
           </Select.Group>
         </Select.Content>
       </Select.Root>
@@ -176,6 +175,14 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     </>
   );
 };
+
+const useUsers = () =>
+  useQuery<User[], Error>({
+    queryKey: ["users"],
+    queryFn: () => axios.get("/api/users").then((res) => res.data),
+    staleTime: 60 * 1000, //60s
+    retry: 3, //reactQuery will try automartically upto 3 times to fetch the data upon encountering any error(s)
+  });
 
 export default AssigneeSelect;
 
