@@ -6,19 +6,41 @@ import prisma from "@/prisma/client";
 // import Link from "../components/Link";
 import { IssueStatusBadge, Link } from "@/app/components"; //Simplifying Imports of multiple modules/components into a singular file without specifying the name of the module - index.ts
 import IssueActions from "./IssueActions";
-import { Status } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
+import NextLink from "next/link";
+import { RiSortAsc } from "react-icons/ri";
 // Now we use the custom Link component which marries both the 'radix-ui' stylized link component and the 'next/navigation' functional Link component
 
 interface Props {
   // searchParams: { status: "OPEN" | "IN_PROGRESS" | "CLOSED" };
-  searchParams: { status: Status };
+  searchParams: { status: Status; orderBy: keyof Issue };
 }
-const Issues = async ({ searchParams: { status } }: Props) => {
+const Issues = async ({ searchParams: { status, orderBy } }: Props) => {
   const statuses = Object.values(Status);
   const validStatus = statuses.includes(status);
   const issues = await prisma.issue.findMany({
     where: { status: validStatus ? status : undefined },
   });
+  const columns: {
+    label: string;
+    value: keyof Issue;
+    className?: "hidden md:table-cell";
+  }[] = [
+    {
+      label: "Issue",
+      value: "title",
+    },
+    {
+      label: "Status",
+      value: "status",
+      className: "hidden md:table-cell",
+    },
+    {
+      label: "Created",
+      value: "createdAt",
+      className: "hidden md:table-cell",
+    },
+  ];
   // await delay(2000);
   return (
     <Fragment>
@@ -34,13 +56,25 @@ const Issues = async ({ searchParams: { status } }: Props) => {
         <Table.Root variant="surface">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
+              {columns.map((c) => (
+                <Table.ColumnHeaderCell key={c.value}>
+                  {/* <NextLink href={`/issues/list?orderBy=${c.value}`}> */}
+                  <NextLink href={{ query: { status, orderBy: c.value } }}>
+                    {c.label}
+                  </NextLink>
+                  {c.value === orderBy && (
+                    <RiSortAsc color="plum" className="inline ml-3" />
+                  )}
+                  {/* The Link component from @/app/components/Link.tsx is leading to a ton of plum color on the screen. So we replace it with the NextLink component from Next/Link */}
+                </Table.ColumnHeaderCell>
+              ))}
+              {/* <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell className="hidden md:table-cell">
                 Status
               </Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell className="hidden md:table-cell">
                 Created
-              </Table.ColumnHeaderCell>
+              </Table.ColumnHeaderCell> */}
             </Table.Row>
           </Table.Header>
           <Table.Body>
