@@ -9,13 +9,14 @@ import IssueActions from "./IssueActions";
 import { Issue, Status } from "@prisma/client";
 import NextLink from "next/link";
 import { RiSortAsc } from "react-icons/ri";
+import Pagination from "@/app/components/Pagination";
 // Now we use the custom Link component which marries both the 'radix-ui' stylized link component and the 'next/navigation' functional Link component
 
 interface Props {
   // searchParams: { status: "OPEN" | "IN_PROGRESS" | "CLOSED" };
-  searchParams: { status: Status; orderBy: keyof Issue };
+  searchParams: { status: Status; orderBy: keyof Issue; page: string };
 }
-const Issues = async ({ searchParams: { status, orderBy } }: Props) => {
+const Issues = async ({ searchParams: { status, orderBy, page } }: Props) => {
   const statuses = Object.values(Status);
   const validStatus = statuses.includes(status);
   const columns: {
@@ -41,12 +42,23 @@ const Issues = async ({ searchParams: { status, orderBy } }: Props) => {
   const orderByObject = columns.map((c) => c.value).includes(orderBy)
     ? { [orderBy]: "asc" }
     : undefined;
+
+  const pageOfIssues = parseInt(page) || 1;
+  const pageSize = 15;
   const issues = await prisma.issue.findMany({
     where: { status: validStatus ? status : undefined },
     orderBy: orderByObject,
+    skip: (pageOfIssues - 1) * pageSize,
+    take: pageSize, //No. of records that we need to fetch
     // orderBy: {
     //   [orderBy]: "asc",
     // },
+  });
+
+  //Now we need to determine the total no. of issues in the database and send it to our pagination component
+
+  const issueCount = await prisma.issue.count({
+    where: { status: validStatus ? status : undefined },
   });
 
   // await delay(2000);
@@ -60,7 +72,7 @@ const Issues = async ({ searchParams: { status, orderBy } }: Props) => {
         </Button>
       </div> */}
       <IssueActions />
-      <div className="m-6">
+      <div className="m-6 space-y-3">
         <Table.Root variant="surface">
           <Table.Header>
             <Table.Row>
@@ -112,6 +124,11 @@ const Issues = async ({ searchParams: { status, orderBy } }: Props) => {
             })}
           </Table.Body>
         </Table.Root>
+        <Pagination
+          countItems={issueCount}
+          currentPage={pageOfIssues}
+          pageSize={pageSize}
+        />
       </div>
     </Fragment>
   );
