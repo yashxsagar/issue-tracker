@@ -1,16 +1,14 @@
 "use client";
-import { Issue, User } from "@prisma/client";
-import { AlertDialog, Flex, HoverCard, Select, Text } from "@radix-ui/themes";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import _ from "lodash";
-import { DotFilledIcon } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
-import Skeleton from "@/app/components/Skeleton";
 import { LoadingSpinner } from "@/app/components";
-import delay from "delay";
-import { HiUserRemove } from "react-icons/hi";
+import Skeleton from "@/app/components/Skeleton";
+import { Issue, User } from "@prisma/client";
+import { DotFilledIcon } from "@radix-ui/react-icons";
+import { Flex, HoverCard, Select, Text } from "@radix-ui/themes";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { HiUserRemove } from "react-icons/hi";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const [isAssigning, setIsAssigning] = useState(false);
@@ -112,7 +110,10 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
           {users?.filter((u) => u.name == user.name).length > 1 ? (
             <HoverCard.Root>
               <HoverCard.Trigger>
-                <Flex justify="between" width="11rem">
+                <Flex
+                  justify="between"
+                  width={{ initial: "20rem", sm: "11rem" }}
+                >
                   <Text>
                     {user.name} {isAssigning && <LoadingSpinner />}
                   </Text>
@@ -163,7 +164,11 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
           <Select.Group>
             <Select.Label>Suggestions</Select.Label>
             <Select.Item value="unassigned">
-              <Flex align={"center"} width={"11rem"} justify={"between"}>
+              <Flex
+                align={"center"}
+                width={{ initial: "20rem", sm: "11rem" }}
+                justify={"between"}
+              >
                 <Text>Unassigned</Text> <HiUserRemove color={"plum"} />
               </Flex>
             </Select.Item>

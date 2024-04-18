@@ -59,13 +59,13 @@ const Issues = async ({ searchParams: { status, orderBy } }: Props) => {
           <Link href="/issues/new">New Issue</Link>
         </Button>
       </div> */}
-      <IssueActions selectedStatus={validStatus ? status : undefined} />
+      <IssueActions />
       <div className="m-6">
         <Table.Root variant="surface">
           <Table.Header>
             <Table.Row>
               {columns.map((c) => (
-                <Table.ColumnHeaderCell key={c.value}>
+                <Table.ColumnHeaderCell key={c.value} className={c.className}>
                   {/* <NextLink href={`/issues/list?orderBy=${c.value}`}> */}
                   <NextLink href={{ query: { status, orderBy: c.value } }}>
                     {c.label}
