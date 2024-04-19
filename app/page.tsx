@@ -4,6 +4,7 @@ import { DoubleArrowLeftIcon } from "@radix-ui/react-icons";
 import LatestIssues from "./LatestIssues";
 import IssueSummary from "./IssueSummary";
 import prisma from "@/prisma/client";
+import IssueChart from "./IssueChart";
 
 export default async function Home() {
   //   {
@@ -28,7 +29,12 @@ export default async function Home() {
     //   </div>
     // </main>
     // <LatestIssues />
-    <IssueSummary
+    // <IssueSummary
+    //   open={countOpen}
+    //   inProgress={countInProgress}
+    //   closed={countClosed}
+    // />
+    <IssueChart
       open={countOpen}
       inProgress={countInProgress}
       closed={countClosed}
