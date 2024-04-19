@@ -1,7 +1,7 @@
 // "use client";
 import prisma from "@/prisma/client";
 import { data } from "autoprefixer";
-import React, { useState } from "react";
+import React, { cache, useState } from "react";
 import {
   Badge,
   Blockquote,
@@ -33,26 +33,47 @@ import { Metadata } from "next";
 type Props = {
   params: { id: string };
 };
+
+const fetchIssue = cache(async (issueId: string) => {
+  let issue = {} as Issue | null;
+  if (isNaN(Number(issueId))) notFound();
+  if (issueId)
+    try {
+      issue = await prisma.issue.findUnique({
+        where: { id: parseInt(issueId) },
+      });
+    } catch (error: any) {
+      console.log(error);
+      notFound();
+      // setError(JSON.stringify(error));
+    }
+  if (!issue) {
+    notFound();
+  } else {
+    return issue;
+  }
+});
+
 const IssueDetailPage = async ({ params: { id } }: Props) => {
   const session = await getServerSession(authOptions);
   //   const [error, setError] = useState("");
   //   if (typeof parseInt(id) == "integer") {
   //     notFound();
   //   }
-  let issue = {} as Issue | null;
-  try {
-    issue = await prisma.issue.findUnique({
-      where: { id: parseInt(id) },
-    });
-  } catch (error: any) {
-    console.log(error);
-    notFound();
-    // setError(JSON.stringify(error));
-  }
-  if (!issue) {
-    notFound();
-  }
-
+  // let issue = {} as Issue | null;
+  // try {
+  //   issue = await prisma.issue.findUnique({
+  //     where: { id: parseInt(id) },
+  //   });
+  // } catch (error: any) {
+  //   console.log(error);
+  //   notFound();
+  //   // setError(JSON.stringify(error));
+  // }
+  // if (!issue) {
+  //   notFound();
+  // }
+  const issue = await fetchIssue(id);
   await delay(2000);
   //This page is now only responsible for laying out the various elements/details of an issue and we offload the logic of generating the UI/formatting for various issue elements that are co-located with this page route
   return (
@@ -92,11 +113,18 @@ const IssueDetailPage = async ({ params: { id } }: Props) => {
 export async function generateMetadata({
   params: { id },
 }: Props): Promise<Metadata> {
-  const issue = await prisma.issue.findUnique({ where: { id: parseInt(id) } });
+  // const issue = await prisma.issue.findUnique({ where: { id: parseInt(id) } });
+  const issue = await fetchIssue(id);
   return {
     title: issue?.title,
     description: issue?.description,
-    keywords: ["View Issue", "Edit Issue", "Assign Issue", "Delete Issue"],
+    keywords: [
+      "Issue Details Page",
+      "View Issue",
+      "Edit Issue",
+      "Assign Issue",
+      "Delete Issue",
+    ],
   };
 }
 
