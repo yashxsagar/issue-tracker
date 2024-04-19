@@ -23,14 +23,20 @@ const IssueChart = ({ open, inProgress, closed }: Props) => {
     { label: "Closed", value: closed },
   ];
   return (
-    <Card size={"1"} className="w-9/12">
+    <Card size={"1"}>
       {/* The ResponsiveContainer will ensure that our chart will adapt to the size of the parent container */}
-      <ResponsiveContainer width={"60%"} height={350}>
+      <ResponsiveContainer width={"100%"} height={350}>
         <BarChart data={chartData}>
           <XAxis dataKey={"label"} />
           <YAxis />
           <Tooltip />
-          <Bar dataKey={"value"} barSize={40} fill="plum" spacing={"1px"} />
+          <Bar
+            dataKey={"value"}
+            barSize={60}
+            fill="plum"
+            spacing={"1px"}
+            animationEasing="ease-in-out"
+          />
         </BarChart>
       </ResponsiveContainer>
     </Card>

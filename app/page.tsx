@@ -1,4 +1,4 @@
-import { Button } from "@radix-ui/themes";
+import { Button, Flex, Grid } from "@radix-ui/themes";
 import Pagination from "./components/Pagination";
 import { DoubleArrowLeftIcon } from "@radix-ui/react-icons";
 import LatestIssues from "./LatestIssues";
@@ -34,10 +34,25 @@ export default async function Home() {
     //   inProgress={countInProgress}
     //   closed={countClosed}
     // />
-    <IssueChart
-      open={countOpen}
-      inProgress={countInProgress}
-      closed={countClosed}
-    />
+    // <IssueChart
+    //   open={countOpen}
+    //   inProgress={countInProgress}
+    //   closed={countClosed}
+    // />
+    <Grid columns={{ initial: "1", md: "2" }} gap="7">
+      <Flex direction="column" gap="7" className="p-6 ">
+        <IssueSummary
+          open={countOpen}
+          inProgress={countInProgress}
+          closed={countClosed}
+        />
+        <IssueChart
+          open={countOpen}
+          inProgress={countInProgress}
+          closed={countClosed}
+        />
+      </Flex>
+      <LatestIssues />
+    </Grid>
   );
 }
