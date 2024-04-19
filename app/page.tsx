@@ -5,6 +5,7 @@ import LatestIssues from "./LatestIssues";
 import IssueSummary from "./IssueSummary";
 import prisma from "@/prisma/client";
 import IssueChart from "./IssueChart";
+import { Metadata } from "next";
 
 export default async function Home() {
   //   {
@@ -56,3 +57,9 @@ export default async function Home() {
     </Grid>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - Dashboard",
+  description:
+    "View a summary of Project Issues - Issue Tracker is a minimalistic open source alternative for Jira by Atlassian for dev teams building and shipping software products",
+};

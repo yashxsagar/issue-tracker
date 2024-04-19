@@ -8,6 +8,7 @@ import { Issue, Status } from "@prisma/client";
 import IssueActions from "./IssueActions";
 import IssueTable, { columnNames } from "./IssueTable";
 import { Flex } from "@radix-ui/themes";
+import { Metadata } from "next";
 // Now we use the custom Link component which marries both the 'radix-ui' stylized link component and the 'next/navigation' functional Link component
 
 interface Props {
@@ -68,3 +69,9 @@ const Issues = async ({ searchParams: { status, orderBy, page } }: Props) => {
 export const dynamic = "force-dynamic"; //This is to make Next.js opt out of static rendering of this page route
 export const revalidate = 0; //Exactly the same as setting the const dynamic= 'force-dynamic'
 export default Issues;
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - List",
+  description:
+    "View and filter list of all Issues in your workspace - OPEN, IN_PROGRESS & CLOSED",
+};
