@@ -23,7 +23,7 @@ const NavBar = () => {
         {/* <nav className="flex flex-row space-x-6 border-b mb-5 px-5 h-16 items-center"> */}
         <Flex justify="between">
           <Flex gap="5" align="center">
-            <Link href="/">
+            <Link href="/" prefetch={false}>
               <IoBugOutline size={18} color={"#8E4585"} />
             </Link>
             <NavLinks />
@@ -39,8 +39,8 @@ const NavBar = () => {
 const NavLinks = () => {
   const currentPathname = usePathname();
   let links = [
-    { label: "Dashboard", href: "/" },
-    { label: "Issues", href: "/issues/list" },
+    { label: "Dashboard", href: "/", prefetch: false },
+    { label: "Issues", href: "/issues/list", prefetch: false },
   ];
   console.log(currentPathname);
   return (
@@ -59,6 +59,7 @@ const NavLinks = () => {
                 "nav-link": true, //Defined in the globals.css file
                 "!text-zinc-900": link.href === currentPathname,
               })}
+              prefetch={link.prefetch}
             >
               {link.label}
             </Link>
