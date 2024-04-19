@@ -36,7 +36,7 @@ const IssueSummary = ({ open, inProgress, closed }: Props) => {
     },
   ];
   return (
-    <Flex gap="3">
+    <Flex gap="3" direction={{ initial: "column", sm: "row" }}>
       {cards.map((c) => {
         return (
           <Link key={c.status} href={`/issues/list?status=${c.status}`}>
@@ -49,7 +49,7 @@ const IssueSummary = ({ open, inProgress, closed }: Props) => {
                 borderWidth: "1px",
                 borderColor: `${c.color}`,
               }}
-              size={"3"}
+              size={{ initial: "1", sm: "3" }}
             >
               <Flex direction={"column"} gap="5">
                 <Text size={"6"}>{c.label}</Text>

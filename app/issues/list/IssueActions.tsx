@@ -8,7 +8,7 @@ const IssueActions = () => {
   return (
     <div className="m-6 space-y-6">
       <h1 className="text-4xl">Issues Page</h1>
-      <Flex justify="between">
+      <Flex justify="between" align={"center"}>
         <IssueStatusFilter />
         <Button>
           <Link href="/issues/new">New Issue</Link>
