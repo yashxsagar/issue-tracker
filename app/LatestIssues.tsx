@@ -14,11 +14,16 @@ const LatestIssues = async () => {
     },
   });
   return (
-    <Card mx="5">
-      <Heading ml="3" mb={"8"} size={"8"} className="pt-4">
+    <Card mx="5" my={{ initial: "5" }}>
+      <Heading
+        ml={{ initial: "3" }}
+        mb={"3"}
+        size={"8"}
+        className="sm: pt-4 md:pt-10"
+      >
         Latest Issues
       </Heading>
-      <Table.Root>
+      <Table.Root className="sm: pb-6">
         <Table.Body>
           {issues.map(async (i) => {
             return (
