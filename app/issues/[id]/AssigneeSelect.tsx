@@ -185,9 +185,9 @@ const useUsers = () =>
   useQuery<User[], Error>({
     queryKey: ["users"],
     queryFn: () => axios.get("/api/users").then((res) => res.data),
-    staleTime: 15000, //60s= 60 * 1000
+    staleTime: 1 * 1000, //60s= 60 * 1000
     retry: 3, //reactQuery will try automartically upto 3 times to fetch the data upon encountering any error(s)
-    refetchOnMount: "always",
+    // refetchOnMount: "always",
   });
 
 export default AssigneeSelect;
