@@ -54,7 +54,7 @@ const DeleteIssueButton = ({ issueId }: Props) => {
     <>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button color={"red"} disabled={deleting}>
+          <Button className="bg-red-600" disabled={deleting}>
             <TrashIcon />
             Delete Issue {deleting && <LoadingSpinner />}
           </Button>
@@ -66,11 +66,11 @@ const DeleteIssueButton = ({ issueId }: Props) => {
           </AlertDialog.Description>
           <Flex gap={"4"} mt="3">
             <AlertDialog.Cancel>
-              <Button color="gray">Cancel Delete</Button>
+              <Button className="bg-gray-300">Cancel Delete</Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action>
               <Button
-                color="red"
+                className="bg-red-600"
                 disabled={deleting}
                 //Now let's abstract out all the code outside of this onClick event handler since it's too lengthy
                 onClick={handleDelete}
@@ -82,7 +82,7 @@ const DeleteIssueButton = ({ issueId }: Props) => {
           </Flex>
         </AlertDialog.Content>
       </AlertDialog.Root>
-      <AlertDialog.Root open={error !== ""}>
+      {/* <AlertDialog.Root open={error !== ""}>
         <AlertDialog.Content>
           <AlertDialog.Title>
             Error in Deleting Issue: {issueId}
@@ -92,7 +92,7 @@ const DeleteIssueButton = ({ issueId }: Props) => {
           </AlertDialog.Description>
           <AlertDialog.Cancel>
             <Button
-              color="gray"
+              className="bg-slate-300"
               mt="2"
               onClick={() => {
                 setError("");
@@ -102,7 +102,7 @@ const DeleteIssueButton = ({ issueId }: Props) => {
             </Button>
           </AlertDialog.Cancel>
         </AlertDialog.Content>
-      </AlertDialog.Root>
+      </AlertDialog.Root> */}
     </>
   );
 };

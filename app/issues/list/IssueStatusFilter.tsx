@@ -10,7 +10,7 @@ const statuses: {
 }[] = [
   { label: "All" },
   { label: "Open", value: "OPEN", color: "red" },
-  { label: "In Progress", value: "IN_PROGRESS", color: "blue" },
+  { label: "Progress", value: "IN_PROGRESS", color: "blue" },
   { label: "Closed", value: "CLOSED", color: "green" },
 ];
 
@@ -21,8 +21,9 @@ const IssueStatusFilter = () => {
     <Box>
       <RadioCards.Root
         size="1"
+        gap={{ initial: "2", sm: "3" }}
         defaultValue={searchParams.get("status") || ""}
-        columns={{ initial: "2", sm: "3", md: "4" }}
+        columns={{ initial: "2", sm: "4" }}
         onValueChange={(status) => {
           const params = new URLSearchParams();
           if (status) params.append("status", status);
@@ -36,7 +37,9 @@ const IssueStatusFilter = () => {
         {statuses.map((s, index) => {
           return (
             <RadioCards.Item key={s.value || ""} value={s.value || ""}>
-              <Text color={s.color || undefined}>{s.label} </Text>
+              <Text color={s.color || undefined} size={{ initial: "1" }}>
+                {s.label}{" "}
+              </Text>
             </RadioCards.Item>
           );
         })}
