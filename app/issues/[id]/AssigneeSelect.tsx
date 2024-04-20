@@ -185,7 +185,7 @@ const useUsers = () =>
   useQuery<User[], Error>({
     queryKey: ["users"],
     queryFn: () => axios.get("/api/users").then((res) => res.data),
-    staleTime: 60 * 1000, //60s
+    staleTime: 0, //60s= 60 * 1000
     retry: 3, //reactQuery will try automartically upto 3 times to fetch the data upon encountering any error(s)
   });
 
