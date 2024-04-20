@@ -14,7 +14,7 @@ const LatestIssues = async () => {
     },
   });
   return (
-    <Card>
+    <Card mx="5">
       <Heading ml="3" mb={"8"} size={"8"} className="pt-4">
         Latest Issues
       </Heading>
