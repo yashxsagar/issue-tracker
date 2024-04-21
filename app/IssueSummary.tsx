@@ -52,7 +52,7 @@ const IssueSummary = ({ open, inProgress, closed }: Props) => {
               size={{ initial: "1", sm: "3" }}
             >
               <Flex direction={"column"} gap="5">
-                <Text size={"6"}>{c.label}</Text>
+                <Text>{c.label}</Text>
                 <Text weight="bold">{c.value}</Text>
               </Flex>
             </Card>
