@@ -36,7 +36,7 @@ const IssueSummary = ({ open, inProgress, closed }: Props) => {
     },
   ];
   return (
-    <Flex gap="3" direction={{ initial: "column", sm: "row" }}>
+    <Flex gap="3" direction={{ initial: "column", sm: "row" }} justify="center">
       {cards.map((c) => {
         return (
           <Link key={c.status} href={`/issues/list?status=${c.status}`}>

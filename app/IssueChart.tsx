@@ -23,7 +23,7 @@ const IssueChart = ({ open, inProgress, closed }: Props) => {
     { label: "Closed", value: closed },
   ];
   return (
-    <Card size={"1"}>
+    <Card size={"1"} variant={window.innerWidth < 900 ? "ghost" : "surface"}>
       {/* The ResponsiveContainer will ensure that our chart will adapt to the size of the parent container */}
       <ResponsiveContainer width={"100%"} height={350}>
         <BarChart data={chartData}>

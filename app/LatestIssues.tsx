@@ -1,9 +1,19 @@
 import prisma from "@/prisma/client";
 import React from "react";
 import { columnNames } from "./issues/list/IssueTable";
-import { Avatar, Card, Flex, Heading, Table } from "@radix-ui/themes";
+import {
+  Tooltip,
+  Avatar,
+  Card,
+  Flex,
+  Heading,
+  Table,
+  Text,
+} from "@radix-ui/themes";
 import Link from "next/link";
 import { IssueStatusBadge } from "./components";
+import { DotFilledIcon } from "@radix-ui/react-icons";
+import { IoInformationCircle } from "react-icons/io5";
 
 const LatestIssues = async () => {
   const issues = await prisma.issue.findMany({
@@ -14,7 +24,7 @@ const LatestIssues = async () => {
     },
   });
   return (
-    <Card mx="5" my={{ initial: "5" }}>
+    <Card mx={{ initial: "1", sm: "2" }} my={{ initial: "5" }}>
       <Heading
         ml={{ initial: "3" }}
         mb={"3"}
@@ -35,14 +45,51 @@ const LatestIssues = async () => {
                       <IssueStatusBadge status={i.status} />
                     </Flex>
                     {i.assignedToUser && (
-                      <Avatar
-                        radius={"full"}
-                        src={i.assignedToUser?.image!}
-                        fallback="?"
-                        size="2"
-                        referrerPolicy="no-referrer"
-                      />
-                    )}{" "}
+                      <Flex
+                        gap="2"
+                        align="end"
+                        direction={{ initial: "column" }}
+                      >
+                        <Avatar
+                          radius={"full"}
+                          src={i.assignedToUser?.image!}
+                          fallback="?"
+                          size="2"
+                          referrerPolicy="no-referrer"
+                        />
+
+                        {issues.filter((i) => i.assignedToUser?.name).length >
+                        1 ? (
+                          <Tooltip content={i.assignedToUser.email}>
+                            <Flex>
+                              <Text
+                                size="1"
+                                as="label"
+                                color="plum"
+                                className="inline cursor-pointer"
+                              >
+                                {i.assignedToUser.name}
+                              </Text>
+                              <IoInformationCircle
+                                color="plum"
+                                height={22}
+                                className="inline"
+                                cursor={"pointer"}
+                              />
+                            </Flex>
+                          </Tooltip>
+                        ) : (
+                          <Text
+                            size="1"
+                            as="label"
+                            color="plum"
+                            className="inline"
+                          >
+                            {i.assignedToUser.name}
+                          </Text>
+                        )}
+                      </Flex>
+                    )}
                   </Flex>
                 </Table.Cell>
                 {/* <Table.Cell>{i.description}</Table.Cell>
